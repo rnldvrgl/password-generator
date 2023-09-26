@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import PasswordHistoryItem from '@/components/PasswordHistoryItem';
 import Slider from '@/components/Slider';
-import Checkbox from '@/components/CheckBox';
+import Checkbox from '@/components/Checkbox';
 import Copy from '@/components/Copy';
 import toast from 'react-hot-toast';
 
