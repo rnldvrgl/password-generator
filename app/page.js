@@ -3,18 +3,19 @@
 import Arrow from '@/components/Arrow';
 import Checkbox from '@/components/CheckBox';
 import Copy from '@/components/Copy';
-import PasswordGenerator from '@/components/PasswordGenerator'
+import PasswordHistoryItem from '@/components/PasswordHistoryItem';
 import Slider from '@/components/Slider';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function Home() {
   const [password, setPassword] = useState("");
-
   const [len, setLen] = useState(8);
   const [upper, setUpper] = useState(false);
   const [lower, setLower] = useState(false);
   const [number, setNumber] = useState(false);
   const [symbol, setSymbol] = useState(false);
+  const [passwordHistory, setPasswordHistory] = useState([]);
 
   const upperLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const lowerLetters = "abcdefghijklmnopqrstuvwxyz";
@@ -61,8 +62,12 @@ export default function Home() {
       newPassword += generateX();
     }
 
+    if (newPassword == '') {
+      return;
+    }
+
     setPassword(newPassword);
-    console.log(newPassword)
+    setPasswordHistory([...passwordHistory, newPassword]);
   };
 
   const handleCopyToClipboard = () => {
@@ -70,22 +75,27 @@ export default function Home() {
       return;
     }
 
-    const textarea = document.createElement("textarea");
-    textarea.value = password;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand("copy");
-    textarea.remove();
-    alert("Password copied to clipboard");
+    navigator.clipboard.writeText(password)
+      .then(() => {
+        toast.success('Password copied to clipboard', {
+          position: 'top-right',
+          duration: 2000,
+        });
+      })
+      .catch((error) => {
+        console.error('Copy to clipboard failed:', error);
+        toast.error('Copy to clipboard failed');
+      });
   };
 
+
   return (
-    <main className="flex items-center justify-center w-screen h-screen p-24 bg-dark text-light">
-      <div className='grid w-full h-full lg:grid-cols-2'>
-        <div className='flex flex-col gap-y-6'>
+    <main className="flex items-stretch justify-center min-h-screen p-24 border">
+      <div className='flex flex-col justify-start w-full h-full lg:flex-row gap-y-6 gap-x-24'>
+        <div className='flex flex-col w-full gap-y-6 h-fit'>
           <h1 className='max-w-xl text-5xl font-bold tracking-wide uppercase text-primary'>Password Generator</h1>
           <button onClick={handleCopyToClipboard} className='relative w-full max-w-4xl p-5 px-6 overflow-y-scroll truncate border text-start bg-secondary/10 border-secondary text-secondary'>
-            {password ? password : 'No Generated Password'}
+            {password ? password : 'Generate a Password'}
             <span className='absolute flex p-0 font-semibold top-2 right-2 gap-x-4 text-dark text-start'>
               <Copy />
             </span>
@@ -94,7 +104,7 @@ export default function Home() {
             <div className='col-span-2'>
               <Slider
                 min={1}
-                max={100}
+                max={30}
                 value={len}
                 onChange={(e) => setLen(e.target.value)}
               />
@@ -106,8 +116,40 @@ export default function Home() {
             <button className='w-full col-span-2 py-5 border bg-primary border-danger px-14 text-dark' onClick={generatePassword}>Generate Password_</button>
           </div>
         </div>
-        <div className='grid'>
-          Password History
+        <div className='flex flex-col w-full h-full'>
+          <div className="flex flex-col justify-between h-full space-y-12s">
+            <div className="mb-4">
+              <div className='flex justify-between'>
+                <h2 className="text-2xl">Password History</h2>
+                <button className='px-4 py-2 border border-primary text-primary' onClick={() => {
+                  if (passwordHistory.length == 0) {
+                    return;
+                  }
+                  setPasswordHistory([])
+                  toast.success('Password history cleared', {
+                    position: 'top-right',
+                    duration: 2000,
+                  });
+                }}>
+                  Clear History
+                </button>
+              </div>
+              <div className="flex flex-col mt-2 gap-y-2">
+                {passwordHistory.length > 0 ? (
+                  passwordHistory.map((password, index) => (
+                    <PasswordHistoryItem
+                      key={index}
+                      password={password}
+                    />
+                  ))
+                ) : (
+                  <div className='mt-16 text-center'>
+                    No generated password
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </main>
