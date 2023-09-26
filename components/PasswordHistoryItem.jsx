@@ -11,7 +11,7 @@ const PasswordHistoryItem = ({ password }) => {
         navigator.clipboard.writeText(password)
             .then(() => {
                 toast.success('Password copied to clipboard', {
-                    position: 'top-right',
+                    position: 'bottom-right',
                     duration: 2000,
                 });
             })
@@ -25,7 +25,7 @@ const PasswordHistoryItem = ({ password }) => {
         <div className="flex items-center justify-between p-2 px-4 rounded-sm bg-primary/10">
             <span>{password}</span>
             <button className='px-2 py-1 rounded-sm ' onClick={handleCopyToClipboard}>
-                <Copy />
+                <Copy fill="#FFFF" />
             </button>
         </div>
     );
