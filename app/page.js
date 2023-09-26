@@ -105,7 +105,7 @@ const Home = () => {
         <div className="mb-4">
           <div className='flex items-center justify-between'>
             <h2 className="text-2xl font-bold uppercase">Password History</h2>
-            <button className='px-4 py-2 border border-primary text-primary' onClick={clearPasswordHistory}>
+            <button className='px-4 py-2 border border-primary text-primary hover:bg-danger/10' onClick={clearPasswordHistory}>
               Clear History
             </button>
           </div>
