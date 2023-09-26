@@ -1,7 +1,7 @@
 import './globals.css'
-import { Poppins } from 'next/font/google'
+import { Tomorrow } from 'next/font/google'
 
-const poppins = Poppins({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] })
+const tomorrow = Tomorrow({ subsets: ['latin'], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] })
 
 export const metadata = {
   title: 'Password Generator',
@@ -11,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={poppins.className}>{children}</body>
+      <body className={tomorrow.className}>{children}</body>
     </html>
   )
 }
